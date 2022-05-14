@@ -1,4 +1,4 @@
-/*
+﻿/*
     Script creado para el módulo de Control de Riego
     Author: José Luis Campero Romero
     Master Agricultura Digital
@@ -76,13 +76,13 @@ void loop() {
   //el valor del sensor fue 1,
   //y en el caso de agua pura superior 750.
   // consideramos que la tierra está seca y necesita agua cuando el valor del sensor se encuentra entre 0 y 300.
-  // El interruptor se encuentra a 0 hasta que se activa a 1 desde la app.
+  // El interruptor se encuentra a 0 hasta que se activa a 1 desde la App.
 
   if ((output_value<=300) && (interruptor=="0")) { // Regamos se enciende el led y se activa la bomba
     digitalWrite(ledrojo,HIGH);
     digitalWrite(rele, HIGH); // se activa el relé para que se ponga en funcionamiento la bomba.
-    // Modificamos el campo Regar en Firebase 
-    Firebase.setFloat("Regar", 1); // indica que estamos regando de forma automatica
+    // Modificamos el campo Regar en Firebase para saber que el riego se ha activado de forma automática 
+    Firebase.setFloat("Regar", 1); // indica que estamos regando de forma automática
     // handle error
     if (Firebase.failed()) {
       Serial.print("setting /number failed:");
@@ -105,30 +105,19 @@ void loop() {
    Serial.print("Interruptor: ");
    Serial.println(interruptor);
 
-    if (interruptor == "1") {  // queremos activar el riego manual el control pasa a la app
+    if (interruptor == "1") {  // queremos activar el riego manual el control pasa a la App
         digitalWrite(ledrojo,HIGH);
         digitalWrite(rele, HIGH);
     }
- /*
-  } else {
-    digitalWrite(Bomba, HIGH);
-    Firebase.setFloat("Regar", 1);
-    // handle error
-    if (Firebase.failed()) {
-      Serial.print("setting /number failed:");
-      Serial.println(Firebase.error());
-      return;
-    }
-  }
-*/
+
   //Aquí estamos mostrando el valor por pantalla
   Serial.print("Salida del sensor : ");
   Serial.println(output_value);
-  //Mapeando los valores de humedad para pasarlo
-  //a porcentaje
+  
+  //Mapeando los valores de humedad para pasarlo a porcentaje
   porcentaje = map(output_value, 790, 0, 100, 0);
 
-
+  //Sacamos valores de los sensores por pantalla
   Serial.print("Humedad (%): ");
   Serial.print(porcentaje);
   Serial.println("%");
@@ -141,7 +130,7 @@ void loop() {
   delay(2000);
 
 
-  // set Float  value
+  // set Float  value. Se actualiza el valor del sensor en FIREBASE para mostrarlo a través de la App
   Firebase.setFloat("HumedadSuelo", porcentaje);
   // handle error
   if (Firebase.failed()) {
